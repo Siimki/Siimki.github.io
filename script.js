@@ -33,8 +33,6 @@ class AttendanceTracker {
         this.searchInput = document.getElementById('searchInput');
         this.studentsList = document.getElementById('studentsList');
         this.submitBtn = document.getElementById('submitBtn');
-        this.selectAllBtn = document.getElementById('selectAllBtn');
-        this.clearAllBtn = document.getElementById('clearAllBtn');
         this.loadingOverlay = document.getElementById('loadingOverlay');
         
         // Modal elements
@@ -50,8 +48,6 @@ class AttendanceTracker {
     setupEventListeners() {
         this.searchInput.addEventListener('input', () => this.filterStudents());
         this.submitBtn.addEventListener('click', () => this.submitAttendance());
-        this.selectAllBtn.addEventListener('click', () => this.selectAllStudents());
-        this.clearAllBtn.addEventListener('click', () => this.clearAllStudents());
         
         // Modal events
         this.addStudentBtn.addEventListener('click', () => this.showAddStudentModal());
