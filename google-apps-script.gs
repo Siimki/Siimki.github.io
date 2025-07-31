@@ -138,22 +138,34 @@ function doGet(e) {
 
 function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
   try {
+    console.log('Creating comprehensive stats...');
+    console.log('Headers:', headers);
+    console.log('Data length:', data.length);
+    
     // Find or create statistics sheet
     let statsSheet = spreadsheet.getSheetByName('Statistics');
     if (!statsSheet) {
       statsSheet = spreadsheet.insertSheet('Statistics');
+      console.log('Created new Statistics sheet');
+    } else {
+      console.log('Found existing Statistics sheet');
     }
     
     // Clear existing stats
     statsSheet.clear();
+    console.log('Cleared existing stats');
     
     // Calculate attendance for each student
     const studentStats = [];
     const dateColumns = headers.slice(2); // Skip Student ID and Name columns
     
+    console.log('Date columns:', dateColumns);
+    
     for (let i = 1; i < data.length; i++) {
       const studentId = data[i][0];
       const studentName = data[i][1];
+      
+      console.log('Processing student:', studentId, studentName);
       
       if (studentId && studentName) {
         let presentCount = 0;
@@ -164,14 +176,18 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
           if (data[i][j] === 'X') {
             presentCount++;
             totalSessions++;
+            console.log('Found X for student', studentId, 'at column', j);
           } else if (data[i][j] === '') {
             // Skip empty cells (future dates)
           } else {
             totalSessions++;
+            console.log('Found non-X for student', studentId, 'at column', j, 'value:', data[i][j]);
           }
         }
         
         const attendancePercent = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : 0;
+        
+        console.log('Student stats:', studentId, 'Present:', presentCount, 'Total:', totalSessions, 'Percent:', attendancePercent);
         
         studentStats.push({
           id: studentId,
@@ -183,16 +199,16 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
       }
     }
     
+    console.log('Calculated stats for', studentStats.length, 'students');
+    
     // Create comprehensive statistics
     const statsData = [
-      ['COMPREHENSIVE ATTENDANCE STATISTICS', '', '', ''],
-      ['Last Updated', currentDate, '', ''],
-      ['', '', '', ''],
-      ['STUDENT ATTENDANCE SUMMARY', '', '', ''],
-      ['Student ID', 'Student Name', 'Present Sessions', 'Total Sessions', 'Attendance %', 'Rating']
+      ['COMPREHENSIVE ATTENDANCE STATISTICS', '', '', '', '', '']
     ];
     
     // Add individual student statistics
+    statsData.push(['Student ID', 'Student Name', 'Present Sessions', 'Total Sessions', 'Attendance %', 'Rating']);
+    
     studentStats.forEach(student => {
       statsData.push([
         student.id,
@@ -210,6 +226,8 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     const totalSessions = studentStats.reduce((sum, s) => sum + s.totalSessions, 0);
     const overallAttendance = totalSessions > 0 ? Math.round((totalPresent / totalSessions) * 100) : 0;
     
+    console.log('Overall stats:', 'Students:', totalStudents, 'Present:', totalPresent, 'Sessions:', totalSessions, 'Percent:', overallAttendance);
+    
     statsData.push(['', '', '', '', '', '']);
     statsData.push(['OVERALL STATISTICS', '', '', '', '', '']);
     statsData.push(['Total Students', totalStudents, '', '', '', '']);
@@ -225,17 +243,33 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
       statsData.push([`Session ${index + 1}`, date, '', '', '', '']);
     });
     
+    console.log('Prepared stats data with', statsData.length, 'rows');
+    
+    // Ensure all rows have the same number of columns
+    const maxColumns = 6;
+    const normalizedStatsData = statsData.map(row => {
+      const normalizedRow = [...row];
+      while (normalizedRow.length < maxColumns) {
+        normalizedRow.push('');
+      }
+      return normalizedRow.slice(0, maxColumns);
+    });
+    
+    console.log('Normalized data:', normalizedStatsData.length, 'rows,', maxColumns, 'columns');
+    
     // Write all data
-    if (statsData.length > 0) {
-      statsSheet.getRange(1, 1, statsData.length, 6).setValues(statsData);
+    if (normalizedStatsData.length > 0) {
+      statsSheet.getRange(1, 1, normalizedStatsData.length, maxColumns).setValues(normalizedStatsData);
+      console.log('Wrote stats data to sheet');
     }
     
     // Format the sheet
-    formatStatsSheet(statsSheet, statsData.length);
+    formatStatsSheet(statsSheet, normalizedStatsData.length);
     
-    console.log('Created comprehensive statistics with attendance counts');
+    console.log('Successfully created comprehensive statistics');
   } catch (error) {
     console.error('Error creating statistics:', error);
+    console.error('Error stack:', error.stack);
   }
 }
 
@@ -249,16 +283,22 @@ function getAttendanceRating(percentage) {
 }
 
 function formatStatsSheet(sheet, dataLength) {
-  // Format main headers
-  sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontSize(14);
-  sheet.getRange(4, 1, 1, 6).setFontWeight('bold');
-  
-  // Format overall statistics
-  const overallStart = dataLength - 8; // Approximate position
-  sheet.getRange(overallStart, 1, 1, 6).setFontWeight('bold');
-  
-  // Auto-resize columns
-  sheet.autoResizeColumns(1, 6);
+  try {
+    // Format main headers
+    sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontSize(14);
+    sheet.getRange(2, 1, 1, 6).setFontWeight('bold');
+    
+    // Format overall statistics (approximate position)
+    const overallStart = Math.max(1, dataLength - 10);
+    sheet.getRange(overallStart, 1, 1, 6).setFontWeight('bold');
+    
+    // Auto-resize columns
+    sheet.autoResizeColumns(1, 6);
+    
+    console.log('Formatted stats sheet');
+  } catch (error) {
+    console.error('Error formatting stats sheet:', error);
+  }
 }
 
 function doPost(e) {
