@@ -1,5 +1,5 @@
 // Sample student data with Estonian names
-const students = [
+let students = [
     { id: "ST001", name: "Mari Tamm" },
     { id: "ST002", name: "Jaan Kask" },
     { id: "ST003", name: "Liisa Saar" },
@@ -32,14 +32,19 @@ class AttendanceTracker {
     initializeElements() {
         this.searchInput = document.getElementById('searchInput');
         this.studentsList = document.getElementById('studentsList');
-        this.totalStudentsEl = document.getElementById('totalStudents');
-        this.presentStudentsEl = document.getElementById('presentStudents');
-        this.attendancePercentEl = document.getElementById('attendancePercent');
-        this.absentStudentsEl = document.getElementById('absentStudents');
         this.submitBtn = document.getElementById('submitBtn');
         this.selectAllBtn = document.getElementById('selectAllBtn');
         this.clearAllBtn = document.getElementById('clearAllBtn');
         this.loadingOverlay = document.getElementById('loadingOverlay');
+        
+        // Modal elements
+        this.addStudentBtn = document.getElementById('addStudentBtn');
+        this.addStudentModal = document.getElementById('addStudentModal');
+        this.closeModal = document.getElementById('closeModal');
+        this.cancelAdd = document.getElementById('cancelAdd');
+        this.confirmAdd = document.getElementById('confirmAdd');
+        this.newStudentName = document.getElementById('newStudentName');
+        this.newStudentId = document.getElementById('newStudentId');
     }
 
     setupEventListeners() {
@@ -47,6 +52,71 @@ class AttendanceTracker {
         this.submitBtn.addEventListener('click', () => this.submitAttendance());
         this.selectAllBtn.addEventListener('click', () => this.selectAllStudents());
         this.clearAllBtn.addEventListener('click', () => this.clearAllStudents());
+        
+        // Modal events
+        this.addStudentBtn.addEventListener('click', () => this.showAddStudentModal());
+        this.closeModal.addEventListener('click', () => this.hideAddStudentModal());
+        this.cancelAdd.addEventListener('click', () => this.hideAddStudentModal());
+        this.confirmAdd.addEventListener('click', () => this.addNewStudent());
+        
+        // Close modal when clicking outside
+        this.addStudentModal.addEventListener('click', (e) => {
+            if (e.target === this.addStudentModal) {
+                this.hideAddStudentModal();
+            }
+        });
+    }
+
+    showAddStudentModal() {
+        this.addStudentModal.classList.add('active');
+        this.newStudentName.focus();
+    }
+
+    hideAddStudentModal() {
+        this.addStudentModal.classList.remove('active');
+        this.newStudentName.value = '';
+        this.newStudentId.value = '';
+    }
+
+    addNewStudent() {
+        const name = this.newStudentName.value.trim();
+        const id = this.newStudentId.value.trim();
+        
+        if (!name || !id) {
+            alert('Please enter both name and ID');
+            return;
+        }
+        
+        // Check if ID already exists
+        if (this.students.some(s => s.id === id)) {
+            alert('Student ID already exists');
+            return;
+        }
+        
+        // Add new student
+        const newStudent = { id, name };
+        this.students.push(newStudent);
+        this.filteredStudents = [...this.students];
+        
+        // Update display
+        this.renderStudents();
+        this.hideAddStudentModal();
+        
+        // Show success message
+        this.showMessage('Student added successfully!', 'success');
+    }
+
+    removeStudent(studentId) {
+        if (confirm('Are you sure you want to remove this student?')) {
+            this.students = this.students.filter(s => s.id !== studentId);
+            this.filteredStudents = this.filteredStudents.filter(s => s.id !== studentId);
+            this.presentStudents.delete(studentId);
+            
+            this.renderStudents();
+            this.updateStats();
+            
+            this.showMessage('Student removed successfully!', 'success');
+        }
     }
 
     updateDate() {
@@ -78,6 +148,10 @@ class AttendanceTracker {
             
             const isPresent = this.presentStudents.has(student.id);
             
+            if (isPresent) {
+                studentItem.classList.add('selected');
+            }
+            
             studentItem.innerHTML = `
                 <input 
                     type="checkbox" 
@@ -90,15 +164,139 @@ class AttendanceTracker {
                     <div class="student-name">${student.name}</div>
                     <div class="student-id">${student.id}</div>
                 </div>
+                <button class="remove-student" data-student-id="${student.id}">&times;</button>
             `;
             
-            const checkbox = studentItem.querySelector('.student-checkbox');
-            checkbox.addEventListener('change', (e) => {
-                this.toggleStudent(student.id, e.target.checked);
+            // Make the whole student item clickable
+            const studentInfo = studentItem.querySelector('.student-info');
+            studentInfo.addEventListener('click', () => {
+                const newState = !this.presentStudents.has(student.id);
+                this.toggleStudent(student.id, newState);
+                
+                if (newState) {
+                    studentItem.classList.add('selected');
+                } else {
+                    studentItem.classList.remove('selected');
+                }
+                
+                const checkbox = studentItem.querySelector('.student-checkbox');
+                checkbox.checked = newState;
             });
+            
+            // Remove student button
+            const removeBtn = studentItem.querySelector('.remove-student');
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent triggering the student selection
+                this.removeStudent(student.id);
+            });
+            
+            // Add long-press delete for mobile
+            this.addLongPressDelete(studentItem, student.id);
             
             this.studentsList.appendChild(studentItem);
         });
+    }
+
+    addLongPressDelete(element, studentId) {
+        let pressTimer;
+        let isLongPress = false;
+        
+        const startPress = (e) => {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                this.showLongPressMenu(studentId, e);
+            }, 500); // 500ms for long press
+        };
+        
+        const endPress = () => {
+            clearTimeout(pressTimer);
+        };
+        
+        const cancelPress = () => {
+            clearTimeout(pressTimer);
+        };
+        
+        // Touch events for mobile
+        element.addEventListener('touchstart', startPress, { passive: true });
+        element.addEventListener('touchend', endPress);
+        element.addEventListener('touchcancel', cancelPress);
+        
+        // Mouse events for desktop
+        element.addEventListener('mousedown', startPress);
+        element.addEventListener('mouseup', endPress);
+        element.addEventListener('mouseleave', cancelPress);
+    }
+
+    showLongPressMenu(studentId, event) {
+        // Prevent default behavior
+        event.preventDefault();
+        
+        // Create a simple menu
+        const menu = document.createElement('div');
+        menu.style.cssText = `
+            position: fixed;
+            top: ${event.touches ? event.touches[0].clientY : event.clientY}px;
+            left: ${event.touches ? event.touches[0].clientX : event.clientX}px;
+            background: var(--neutral-white);
+            border: 2px solid var(--club-orange);
+            border-radius: 8px;
+            padding: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-size: 0.9rem;
+        `;
+        
+        menu.innerHTML = `
+            <div style="color: var(--neutral-dark); margin-bottom: 8px; font-weight: 600;">Delete Student?</div>
+            <div style="display: flex; gap: 8px;">
+                <button id="confirm-delete" style="
+                    background: var(--error-red);
+                    color: white;
+                    border: none;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                ">Delete</button>
+                <button id="cancel-delete" style="
+                    background: var(--neutral-light);
+                    color: var(--neutral-dark);
+                    border: none;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                ">Cancel</button>
+            </div>
+        `;
+        
+        document.body.appendChild(menu);
+        
+        // Handle menu actions
+        menu.querySelector('#confirm-delete').addEventListener('click', () => {
+            this.removeStudent(studentId);
+            document.body.removeChild(menu);
+        });
+        
+        menu.querySelector('#cancel-delete').addEventListener('click', () => {
+            document.body.removeChild(menu);
+        });
+        
+        // Close menu when clicking outside
+        const closeMenu = (e) => {
+            if (!menu.contains(e.target)) {
+                document.body.removeChild(menu);
+                document.removeEventListener('click', closeMenu);
+                document.removeEventListener('touchstart', closeMenu);
+            }
+        };
+        
+        // Delay adding event listeners to prevent immediate closure
+        setTimeout(() => {
+            document.addEventListener('click', closeMenu);
+            document.addEventListener('touchstart', closeMenu);
+        }, 100);
     }
 
     toggleStudent(studentId, isPresent) {
@@ -128,18 +326,9 @@ class AttendanceTracker {
     }
 
     updateStats() {
-        const totalStudents = this.students.length;
-        const presentCount = this.presentStudents.size;
-        const absentCount = totalStudents - presentCount;
-        const attendancePercent = totalStudents > 0 ? Math.round((presentCount / totalStudents) * 100) : 0;
-        
-        this.totalStudentsEl.textContent = totalStudents;
-        this.presentStudentsEl.textContent = presentCount;
-        this.attendancePercentEl.textContent = attendancePercent + '%';
-        this.absentStudentsEl.textContent = absentCount;
-        
-        // Update colors based on attendance percentage
-        this.updateAttendanceColor(attendancePercent);
+        // Remove stats update since we removed the stats section
+        // Just update the submit button
+        this.updateSubmitButton();
     }
 
     updateAttendanceColor(percentage) {
@@ -200,7 +389,7 @@ class AttendanceTracker {
     }
 
     async submitToGoogleSheets(data) {
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyP8vzgYBK65Eyg4EdpMVtqSrstinpnYXoostRi1txYkr7ka8AyQLSDXKYQEpOf_0eXUg/exec';
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztNCJX98nbQE2w67jocicMCxKMPl8gM2HJ5vNI6wQ7iQmdKQZEHcms7LzKY01APUYUNQ/exec';
         
         try {
             // Convert data to URL parameters
@@ -244,38 +433,21 @@ class AttendanceTracker {
     }
 
     showSuccessMessage() {
-        // Create a temporary success message
-        const message = document.createElement('div');
-        message.style.cssText = `
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #4CAF50;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 8px;
-            font-weight: 500;
-            z-index: 1001;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        `;
-        message.textContent = '✅ Attendance submitted successfully!';
-        
-        document.body.appendChild(message);
-        
-        setTimeout(() => {
-            document.body.removeChild(message);
-        }, 3000);
+        this.showMessage('✅ Attendance submitted successfully!', 'success');
     }
 
     showErrorMessage() {
+        this.showMessage('❌ Error submitting attendance. Please try again.', 'error');
+    }
+
+    showMessage(text, type = 'info') {
         const message = document.createElement('div');
         message.style.cssText = `
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            background: #f44336;
+            background: ${type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#2196F3'};
             color: white;
             padding: 15px 25px;
             border-radius: 8px;
@@ -283,7 +455,7 @@ class AttendanceTracker {
             z-index: 1001;
             box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         `;
-        message.textContent = '❌ Error submitting attendance. Please try again.';
+        message.textContent = text;
         
         document.body.appendChild(message);
         
