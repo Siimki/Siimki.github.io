@@ -389,7 +389,7 @@ class AttendanceTracker {
     }
 
     async submitToGoogleSheets(data) {
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztNCJX98nbQE2w67jocicMCxKMPl8gM2HJ5vNI6wQ7iQmdKQZEHcms7LzKY01APUYUNQ/exec';
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzJRrsiKX5O5CfTFI08OLrctvUZm0UtW-6CZb9xJx9qCO1nwx7STOQcC31ogMpb1TwP3g/exec';
         
         try {
             // Convert data to URL parameters
