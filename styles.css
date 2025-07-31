@@ -28,7 +28,7 @@ body {
 .container {
     max-width: 600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 10px;
     min-height: 100vh;
 }
 
@@ -99,8 +99,8 @@ body {
 .students-section {
     background: var(--neutral-white);
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 25px;
+    padding: 15px;
+    margin-bottom: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--club-orange);
 }
@@ -109,7 +109,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .section-header h2 {
@@ -170,7 +170,7 @@ body {
 }
 
 .students-list {
-    max-height: 500px;
+    max-height: calc(100vh - 120px);
     overflow-y: auto;
 }
 
