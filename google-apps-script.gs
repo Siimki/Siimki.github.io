@@ -35,9 +35,40 @@ function doGet(e) {
         headers = existingData[0] || [];
         console.log('Existing headers:', headers);
         
-        // Map student IDs to their row numbers
+        // Check if we have old format (ID + Name) or new format (Name only)
+        const hasOldFormat = headers.length >= 2 && headers[0] === 'Student ID' && headers[1] === 'Student Name';
+        
+        if (hasOldFormat) {
+          // Convert old format to new format
+          console.log('Converting from old format (ID + Name) to new format (Name only)');
+          const newHeaders = ['Student Name'];
+          const newData = [newHeaders];
+          
+          // Copy student names from old format to new format
+          for (let i = 1; i < existingData.length; i++) {
+            if (existingData[i][1]) { // Student name is in column 1 (second column)
+              const newRow = [existingData[i][1]]; // Only keep the name
+              // Copy attendance data from column 2 onwards
+              for (let j = 2; j < existingData[i].length; j++) {
+                newRow.push(existingData[i][j]);
+              }
+              newData.push(newRow);
+            }
+          }
+          
+          existingData = newData;
+          headers = newHeaders;
+          
+          // Clear the sheet and write new format
+          sheet.clear();
+          if (newData.length > 0) {
+            sheet.getRange(1, 1, newData.length, newData[0].length).setValues(newData);
+          }
+        }
+        
+        // Map student names to their row numbers (using name as identifier)
         for (let i = 1; i < existingData.length; i++) {
-          if (existingData[i][0]) { // Student ID in first column
+          if (existingData[i][0]) { // Student name in first column
             studentRows[existingData[i][0]] = i;
           }
         }
@@ -45,7 +76,7 @@ function doGet(e) {
       
       // If sheet is empty, create initial structure
       if (headers.length === 0) {
-        headers = ['Student ID', 'Student Name'];
+        headers = ['Student Name'];
         existingData = [headers];
       }
       
@@ -67,30 +98,37 @@ function doGet(e) {
       // Add new students if they don't exist
       let newStudentsAdded = false;
       allStudents.forEach(student => {
-        if (!studentRows.hasOwnProperty(student.id)) {
-          // Add new student row
-          const newRow = [student.id, student.name];
+        if (!studentRows.hasOwnProperty(student.name)) {
+          // Add new student row (only name, no ID)
+          const newRow = [student.name];
           // Fill with empty values for existing date columns
-          for (let i = 2; i < headers.length; i++) {
+          for (let i = 1; i < headers.length; i++) {
             newRow.push('');
           }
           existingData.push(newRow);
-          studentRows[student.id] = existingData.length - 1;
+          studentRows[student.name] = existingData.length - 1;
           newStudentsAdded = true;
-          console.log('Added new student row:', student.id, student.name);
+          console.log('Added new student row:', student.name);
         }
       });
       
       // Update attendance for existing students
       allStudents.forEach(student => {
-        const rowIndex = studentRows[student.id];
+        const rowIndex = studentRows[student.name];
         if (rowIndex !== undefined) {
           // Ensure the row has enough columns
           while (existingData[rowIndex].length <= dateColumnIndex) {
             existingData[rowIndex].push('');
           }
-          existingData[rowIndex][dateColumnIndex] = student.present ? 'X' : '';
-          console.log('Updated student', student.id, 'for date', date, 'Value:', student.present ? 'X' : '');
+          
+          // If student was present in this submission, mark them as present
+          // This allows multiple coaches to contribute to the same date
+          if (student.present) {
+            existingData[rowIndex][dateColumnIndex] = 'X';
+            console.log('Marked student', student.name, 'as present for date', date);
+          }
+          // Note: We don't overwrite existing 'X' with empty if student is not present
+          // This allows multiple submissions to accumulate attendance
         }
       });
       
@@ -112,7 +150,7 @@ function doGet(e) {
             date: date,
             studentsCount: allStudents.length,
             presentCount: allStudents.filter(s => s.present).length,
-            totalDates: headers.length - 2, // Subtract Student ID and Name columns
+            totalDates: headers.length - 1, // Subtract Student Name column only
             totalStudents: existingData.length - 1 // Subtract header row
           }
         }))
@@ -157,40 +195,38 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     
     // Calculate attendance for each student
     const studentStats = [];
-    const dateColumns = headers.slice(2); // Skip Student ID and Name columns
+    const dateColumns = headers.slice(1); // Skip Student Name column
     
     console.log('Date columns:', dateColumns);
     
     for (let i = 1; i < data.length; i++) {
-      const studentId = data[i][0];
-      const studentName = data[i][1];
+      const studentName = data[i][0];
       
-      console.log('Processing student:', studentId, studentName);
+      console.log('Processing student:', studentName);
       
-      if (studentId && studentName) {
+      if (studentName) {
         let presentCount = 0;
         let totalSessions = 0;
         
         // Count attendance for all dates
-        for (let j = 2; j < data[i].length; j++) {
+        for (let j = 1; j < data[i].length; j++) {
           if (data[i][j] === 'X') {
             presentCount++;
             totalSessions++;
-            console.log('Found X for student', studentId, 'at column', j);
+            console.log('Found X for student', studentName, 'at column', j);
           } else if (data[i][j] === '') {
             // Skip empty cells (future dates)
           } else {
             totalSessions++;
-            console.log('Found non-X for student', studentId, 'at column', j, 'value:', data[i][j]);
+            console.log('Found non-X for student', studentName, 'at column', j, 'value:', data[i][j]);
           }
         }
         
         const attendancePercent = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : 0;
         
-        console.log('Student stats:', studentId, 'Present:', presentCount, 'Total:', totalSessions, 'Percent:', attendancePercent);
+        console.log('Student stats:', studentName, 'Present:', presentCount, 'Total:', totalSessions, 'Percent:', attendancePercent);
         
         studentStats.push({
-          id: studentId,
           name: studentName,
           presentCount: presentCount,
           totalSessions: totalSessions,
@@ -207,11 +243,10 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     ];
     
     // Add individual student statistics
-    statsData.push(['Student ID', 'Student Name', 'Present Sessions', 'Total Sessions', 'Attendance %', 'Rating']);
+    statsData.push(['Student Name', 'Present Sessions', 'Total Sessions', 'Attendance %', 'Rating']);
     
     studentStats.forEach(student => {
       statsData.push([
-        student.id,
         student.name,
         student.presentCount,
         student.totalSessions,
