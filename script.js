@@ -1,20 +1,20 @@
 // Sample student data with Estonian names
 let students = [
-    { id: "ST001", name: "Mari Tamm" },
-    { id: "ST002", name: "Jaan Kask" },
-    { id: "ST003", name: "Liisa Saar" },
-    { id: "ST004", name: "Andres Põder" },
-    { id: "ST005", name: "Kati Lepik" },
-    { id: "ST006", name: "Mart Võsa" },
-    { id: "ST007", name: "Eva Kivi" },
-    { id: "ST008", name: "Peeter Mänd" },
-    { id: "ST009", name: "Anna Kuusik" },
-    { id: "ST010", name: "Tõnu Oja" },
-    { id: "ST011", name: "Helena Lind" },
-    { id: "ST012", name: "Raivo Koppel" },
-    { id: "ST013", name: "Kadri Rand" },
-    { id: "ST014", name: "Urmas Sild" },
-    { id: "ST015", name: "Tiina Kask" }
+    { name: "Mari Tamm" },
+    { name: "Jaan Kask" },
+    { name: "Liisa Saar" },
+    { name: "Andres Põder" },
+    { name: "Kati Lepik" },
+    { name: "Mart Võsa" },
+    { name: "Eva Kivi" },
+    { name: "Peeter Mänd" },
+    { name: "Anna Kuusik" },
+    { name: "Tõnu Oja" },
+    { name: "Helena Lind" },
+    { name: "Raivo Koppel" },
+    { name: "Kadri Rand" },
+    { name: "Urmas Sild" },
+    { name: "Tiina Kask" }
 ];
 
 class AttendanceTracker {
@@ -73,15 +73,12 @@ class AttendanceTracker {
         const name = this.newStudentName.value.trim();
         
         if (!name) {
-            alert('Please enter a name for the new student');
+            alert('Palun sisesta uue õpilase nimi');
             return;
         }
         
-        // Generate a simple ID
-        const newId = 'ST' + String(this.students.length + 1).padStart(3, '0');
-        
         // Add new student
-        const newStudent = { id: newId, name };
+        const newStudent = { name };
         this.students.push(newStudent);
         
         // Re-sort students alphabetically
@@ -93,19 +90,19 @@ class AttendanceTracker {
         this.hideAddStudentModal();
         
         // Show success message
-        this.showMessage('Student added successfully!', 'success');
+        this.showMessage('Õpilane lisatud edukalt!', 'success');
     }
 
-    removeStudent(studentId) {
-        if (confirm('Are you sure you want to remove this student?')) {
-            this.students = this.students.filter(s => s.id !== studentId);
-            this.filteredStudents = this.filteredStudents.filter(s => s.id !== studentId);
-            this.presentStudents.delete(studentId);
+    removeStudent(studentName) {
+        if (confirm('Kas oled kindel, et soovid selle õpilase eemaldada?')) {
+            this.students = this.students.filter(s => s.name !== studentName);
+            this.filteredStudents = this.filteredStudents.filter(s => s.name !== studentName);
+            this.presentStudents.delete(studentName);
             
             this.renderStudents();
             this.updateStats();
             
-            this.showMessage('Student removed successfully!', 'success');
+            this.showMessage('Õpilane eemaldatud edukalt!', 'success');
         }
     }
 
@@ -116,7 +113,7 @@ class AttendanceTracker {
             const studentItem = document.createElement('div');
             studentItem.className = 'student-item';
             
-            const isPresent = this.presentStudents.has(student.id);
+            const isPresent = this.presentStudents.has(student.name);
             
             if (isPresent) {
                 studentItem.classList.add('selected');
@@ -126,14 +123,14 @@ class AttendanceTracker {
                 <input 
                     type="checkbox" 
                     class="student-checkbox" 
-                    id="student-${student.id}"
+                    id="student-${student.name}"
                     ${isPresent ? 'checked' : ''}
-                    data-student-id="${student.id}"
+                    data-student-name="${student.name}"
                 >
                 <div class="student-info">
                     <div class="student-name">${student.name}</div>
                 </div>
-                <button class="remove-student" data-student-id="${student.id}">&times;</button>
+                <button class="remove-student" data-student-name="${student.name}">&times;</button>
             `;
             
             // Make the checkbox clickable
@@ -141,7 +138,7 @@ class AttendanceTracker {
             checkbox.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent triggering the student info click
                 const newState = checkbox.checked;
-                this.toggleStudent(student.id, newState);
+                this.toggleStudent(student.name, newState);
                 
                 if (newState) {
                     studentItem.classList.add('selected');
@@ -158,8 +155,8 @@ class AttendanceTracker {
                     return;
                 }
                 
-                const newState = !this.presentStudents.has(student.id);
-                this.toggleStudent(student.id, newState);
+                const newState = !this.presentStudents.has(student.name);
+                this.toggleStudent(student.name, newState);
                 
                 if (newState) {
                     studentItem.classList.add('selected');
@@ -174,18 +171,18 @@ class AttendanceTracker {
             const removeBtn = studentItem.querySelector('.remove-student');
             removeBtn.addEventListener('click', (e) => {
                 e.stopPropagation(); // Prevent triggering the student selection
-                this.removeStudent(student.id);
+                this.removeStudent(student.name);
             });
             
             this.studentsList.appendChild(studentItem);
         });
     }
 
-    toggleStudent(studentId, isPresent) {
+    toggleStudent(studentName, isPresent) {
         if (isPresent) {
-            this.presentStudents.add(studentId);
+            this.presentStudents.add(studentName);
         } else {
-            this.presentStudents.delete(studentId);
+            this.presentStudents.delete(studentName);
         }
         this.updateStats();
         this.updateSubmitButton();
@@ -211,9 +208,8 @@ class AttendanceTracker {
                 date: new Date().toISOString().split('T')[0],
                 presentStudents: Array.from(this.presentStudents),
                 allStudents: this.students.map(student => ({
-                    id: student.id,
                     name: student.name,
-                    present: this.presentStudents.has(student.id)
+                    present: this.presentStudents.has(student.name)
                 }))
             };
 
