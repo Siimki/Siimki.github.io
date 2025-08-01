@@ -209,7 +209,24 @@ body::before {
     min-height: 50px;
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden; /* Prevent content overflow */
+    overflow: visible; /* Allow content to be visible */
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    /* Ensure the entire item is clickable */
+    position: relative;
+    /* Make sure the entire area responds to clicks */
+    background-clip: border-box;
+    /* Ensure the entire visual area is clickable */
+    margin: 0;
+    outline: none;
+    /* Make the entire area clickable including padding */
+    background: var(--neutral-white);
+    /* Ensure padding area is clickable */
+    background-clip: padding-box;
+    /* Make sure the entire element is clickable */
+    background-origin: border-box;
 }
 
 .student-item:last-child {
@@ -247,6 +264,9 @@ body::before {
     transition: all 0.2s ease;
     min-width: 24px;
     min-height: 24px;
+    pointer-events: auto; /* Ensure checkbox is clickable */
+    z-index: 2; /* Ensure checkbox is above other elements */
+    position: relative;
 }
 
 .student-checkbox:checked {
@@ -265,6 +285,11 @@ body::before {
     align-items: center;
     overflow: hidden; /* Prevent text overflow */
     min-width: 0; /* Allow flex item to shrink */
+    /* Ensure this area is clickable */
+    position: relative;
+    z-index: 1;
+    /* Make sure this area is part of the clickable surface */
+    background: transparent;
 }
 
 .student-name {
@@ -277,6 +302,13 @@ body::before {
     overflow: hidden; /* Hide overflow text */
     text-overflow: ellipsis; /* Show ... for long names */
     width: 100%;
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    /* Ensure text is part of clickable area */
+    position: relative;
+    z-index: 1;
 }
 
 .student-id {
