@@ -150,9 +150,14 @@ class AttendanceTracker {
                 }
             });
             
-            // Make the whole student item clickable
-            const studentInfo = studentItem.querySelector('.student-info');
-            studentInfo.addEventListener('click', () => {
+            // Make the entire student item clickable
+            studentItem.addEventListener('click', (e) => {
+                // Don't trigger if clicking on checkbox or remove button
+                if (e.target.classList.contains('student-checkbox') || 
+                    e.target.classList.contains('remove-student')) {
+                    return;
+                }
+                
                 const newState = !this.presentStudents.has(student.id);
                 this.toggleStudent(student.id, newState);
                 
