@@ -204,8 +204,18 @@ class AttendanceTracker {
         this.showLoading(true);
         
         try {
+            // Format date in Estonian format
+            const today = new Date();
+            const day = today.getDate();
+            const month = today.getMonth();
+            const estonianMonths = [
+                'Jaanuar', 'Veebruar', 'Märts', 'Aprill', 'Mai', 'Juuni',
+                'Juuli', 'August', 'September', 'Oktoober', 'November', 'Detsember'
+            ];
+            const estonianDate = `${day}. ${estonianMonths[month]}`;
+            
             const attendanceData = {
-                date: new Date().toISOString().split('T')[0],
+                date: estonianDate,
                 presentStudents: Array.from(this.presentStudents),
                 allStudents: this.students.map(student => ({
                     name: student.name,
@@ -235,7 +245,7 @@ class AttendanceTracker {
     }
 
     async submitToGoogleSheets(data) {
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbztNCJX98nbQE2w67jocicMCxKMPl8gM2HJ5vNI6wQ7iQmdKQZEHcms7LzKY01APUYUNQ/exec';
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSl1nz4CKkNsToj5PCC51e4jlDQ1xtZalqLgyB5hQWzCA5gLMmTdX7Z0szgwsi7F1fng/exec';
         
         try {
             // Convert data to URL parameters
