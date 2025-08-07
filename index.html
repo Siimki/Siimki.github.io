@@ -13,9 +13,9 @@
             <div class="section-header">
                 <h2>Pärnu Kalevi kohaloleku kontroll</h2>
                 <div class="actions">
-                    <button class="btn btn-secondary" id="addStudentBtn">Add Student</button>
+                    <button class="btn btn-secondary" id="addStudentBtn">Lisa õpilane</button>
                     <button class="btn btn-primary" id="submitBtn" disabled>
-                        Submit Attendance
+                        Esita kohalolek
                     </button>
                 </div>
             </div>
@@ -29,25 +29,25 @@
         <div class="modal-overlay" id="addStudentModal">
             <div class="modal">
                 <div class="modal-header">
-                    <h3>Add New Student</h3>
+                    <h3>Lisa uus õpilane</h3>
                     <button class="modal-close" id="closeModal">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="newStudentName">Student Name:</label>
-                        <input type="text" id="newStudentName" placeholder="Enter student name">
+                        <label for="newStudentName">Õpilase nimi:</label>
+                        <input type="text" id="newStudentName" placeholder="Sisesta õpilase nimi">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" id="cancelAdd">Cancel</button>
-                    <button class="btn btn-primary" id="confirmAdd">Add Student</button>
+                    <button class="btn btn-secondary" id="cancelAdd">Tühista</button>
+                    <button class="btn btn-primary" id="confirmAdd">Lisa õpilane</button>
                 </div>
             </div>
         </div>
 
         <div class="loading-overlay" id="loadingOverlay">
             <div class="loading-spinner"></div>
-            <p>Submitting to Google Sheets...</p>
+            <p>Saadetakse Google Sheets'i...</p>
         </div>
     </div>
 

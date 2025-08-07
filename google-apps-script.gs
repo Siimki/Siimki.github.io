@@ -3,138 +3,208 @@
 
 // Replace with your specific Google Sheet ID
 const SPREADSHEET_ID = '1oVQu0gQvn87ls365KRspN_GO4G-IEKXTcJJWFA3OVLE';
+const TIMEZONE = 'Europe/Tallinn'; // Your local timezone
+
+// Estonian month names
+const ESTONIAN_MONTHS = [
+  'Jaanuar', 'Veebruar', 'Märts', 'Aprill', 'Mai', 'Juuni',
+  'Juuli', 'August', 'September', 'Oktoober', 'November', 'Detsember'
+];
+
+// Google Apps Script for Google Sheets Integration
+// ... (keep your SPREADSHEET_ID declaration as is) ...
+
+function formatDateToEstonian(dateString) {
+  try {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = ESTONIAN_MONTHS[date.getMonth()];
+    return `${day}. ${month}`;
+  } catch (e) {
+    console.log('Error formatting date:', dateString, e);
+    return dateString; // Return original if formatting fails
+  }
+}
 
 function doGet(e) {
   try {
-    // Log all parameters for debugging
     console.log('Received parameters:', e.parameter);
     
-    // Check if this is an attendance submission
     if (e.parameter.date && e.parameter.allStudents) {
-      console.log('Processing attendance submission...');
-      
-      // Parse the incoming data from URL parameters
-      const date = e.parameter.date;
+      const dateString = e.parameter.date; // e.g., "6. August"
       const allStudents = JSON.parse(e.parameter.allStudents);
       
-      console.log('Date:', date);
-      console.log('Students:', allStudents);
+      console.log('Original Date String:', dateString);
+      
+      // Parse Estonian date format to get the actual date
+      let actualDate;
+      try {
+        // Extract day and month from Estonian format
+        const match = dateString.match(/^(\d+)\.\s*([A-Za-zäöüõÄÖÜÕ]+)$/);
+        if (match) {
+          const day = parseInt(match[1]);
+          const monthName = match[2];
+          const monthIndex = ESTONIAN_MONTHS.findIndex(m => 
+            m.toLowerCase() === monthName.toLowerCase()
+          );
+          
+          if (monthIndex !== -1) {
+            const currentYear = new Date().getFullYear();
+            actualDate = new Date(currentYear, monthIndex, day);
+            console.log('Parsed date:', actualDate);
+          } else {
+            throw new Error('Invalid month name');
+          }
+        } else {
+          throw new Error('Invalid Estonian date format');
+        }
+      } catch (parseError) {
+        console.log('Failed to parse Estonian date, trying as regular date:', parseError);
+        actualDate = new Date(dateString);
+      }
+      
+      // Normalize to YYYY-MM-DD for comparison
+      const normalizedDate = Utilities.formatDate(actualDate, TIMEZONE, 'yyyy-MM-dd');
+      console.log('Normalized Date for comparison:', normalizedDate);
       
       const spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
       const sheet = spreadsheet.getSheetByName('Attendance') || spreadsheet.insertSheet('Attendance');
       
-      console.log('Sheet name:', sheet.getName());
-      
-      // Get existing data
       let existingData = [];
       let headers = [];
-      let studentRows = {};
-      
-      if (sheet.getLastRow() > 0 && sheet.getLastColumn() > 0) {
+      if (sheet.getLastRow() > 0) {
         existingData = sheet.getRange(1, 1, sheet.getLastRow(), sheet.getLastColumn()).getValues();
         headers = existingData[0] || [];
-        console.log('Existing headers:', headers);
-        
-        // Map student IDs to their row numbers
-        for (let i = 1; i < existingData.length; i++) {
-          if (existingData[i][0]) { // Student ID in first column
-            studentRows[existingData[i][0]] = i;
-          }
-        }
       }
       
       // If sheet is empty, create initial structure
       if (headers.length === 0) {
-        headers = ['Student ID', 'Student Name'];
+        headers = ['Student Name'];
         existingData = [headers];
       }
       
-      // Check if date column exists, if not add it
-      let dateColumnIndex = headers.indexOf(date);
-      if (dateColumnIndex === -1) {
-        headers.push(date);
-        dateColumnIndex = headers.length - 1;
-        console.log('Added new date column:', date, 'at index:', dateColumnIndex);
-        
-        // Add empty cells for existing rows
-        for (let i = 1; i < existingData.length; i++) {
-          while (existingData[i].length < headers.length) {
-            existingData[i].push('');
+      // Find existing column by comparing normalized dates
+      let dateColumnIndex = -1;
+      for (let i = 1; i < headers.length; i++) {
+        const headerValue = headers[i];
+        if (headerValue) {
+          try {
+            let headerDate;
+            
+            // Check if it's already in Estonian format
+            const estonianMatch = String(headerValue).match(/^(\d+)\.\s*([A-Za-zäöüõÄÖÜÕ]+)$/);
+            if (estonianMatch) {
+              const day = parseInt(estonianMatch[1]);
+              const monthName = estonianMatch[2];
+              const monthIndex = ESTONIAN_MONTHS.findIndex(m => 
+                m.toLowerCase() === monthName.toLowerCase()
+              );
+              if (monthIndex !== -1) {
+                const currentYear = new Date().getFullYear();
+                headerDate = new Date(currentYear, monthIndex, day);
+              }
+            } else {
+              // Try parsing as regular date
+              headerDate = new Date(headerValue);
+            }
+            
+            if (headerDate && !isNaN(headerDate.getTime())) {
+              const normalizedHeaderDate = Utilities.formatDate(headerDate, TIMEZONE, 'yyyy-MM-dd');
+              if (normalizedHeaderDate === normalizedDate) {
+                dateColumnIndex = i;
+                console.log('Found existing column at index:', i, 'with header:', headerValue);
+                break;
+              }
+            }
+          } catch (err) {
+            console.log(`Could not parse header '${headerValue}' as a date. Skipping.`);
           }
         }
       }
       
+      console.log('Date column index:', dateColumnIndex);
+      
+      // Add new column if not found
+      if (dateColumnIndex === -1) {
+        headers.push(dateString); // Use Estonian format for display
+        dateColumnIndex = headers.length - 1;
+        console.log('Added new column for:', dateString);
+      }
+      
+      // The rest of your function (updating student rows, writing data, creating stats)
+      // can remain exactly the same. Just ensure it uses the final `headers` and `existingData` arrays.
+
+      // --- PASTE THE REST OF YOUR doGet FUNCTION LOGIC HERE ---
+      // (Mapping student rows, adding new students, updating attendance, etc.)
+      // It will work correctly with the properly identified dateColumnIndex.
+      
+      // Example of the rest of the logic
+      let studentRows = {};
+      for (let i = 1; i < existingData.length; i++) {
+        if (existingData[i][0]) { studentRows[existingData[i][0]] = i; }
+      }
+      
       // Add new students if they don't exist
-      let newStudentsAdded = false;
       allStudents.forEach(student => {
-        if (!studentRows.hasOwnProperty(student.id)) {
-          // Add new student row
-          const newRow = [student.id, student.name];
-          // Fill with empty values for existing date columns
-          for (let i = 2; i < headers.length; i++) {
-            newRow.push('');
+          if (!studentRows.hasOwnProperty(student.name)) {
+              const newRow = [student.name];
+              // Fill with empty values for all columns (including the new date column)
+              for (let i = 1; i < headers.length; i++) { 
+                  newRow.push(''); 
+              }
+              existingData.push(newRow);
+              studentRows[student.name] = existingData.length - 1;
+              console.log('Added new student:', student.name);
           }
-          existingData.push(newRow);
-          studentRows[student.id] = existingData.length - 1;
-          newStudentsAdded = true;
-          console.log('Added new student row:', student.id, student.name);
-        }
       });
       
       // Update attendance for existing students
       allStudents.forEach(student => {
-        const rowIndex = studentRows[student.id];
-        if (rowIndex !== undefined) {
-          // Ensure the row has enough columns
-          while (existingData[rowIndex].length <= dateColumnIndex) {
-            existingData[rowIndex].push('');
+          const rowIndex = studentRows[student.name];
+          if (rowIndex !== undefined) {
+              // Ensure the row has enough columns for the date column
+              while (existingData[rowIndex].length <= dateColumnIndex) { 
+                  existingData[rowIndex].push(''); 
+              }
+              if (student.present) { 
+                  existingData[rowIndex][dateColumnIndex] = 'X'; 
+                  console.log('Marked', student.name, 'as present for', normalizedDate);
+              }
           }
-          existingData[rowIndex][dateColumnIndex] = student.present ? 'X' : '';
-          console.log('Updated student', student.id, 'for date', date, 'Value:', student.present ? 'X' : '');
-        }
       });
+      
+      // CRITICAL: Ensure ALL rows have exactly the same number of columns
+      const maxColumns = headers.length;
+      for (let i = 0; i < existingData.length; i++) {
+          while (existingData[i].length < maxColumns) {
+              existingData[i].push('');
+          }
+          // Trim if somehow we have too many columns
+          if (existingData[i].length > maxColumns) {
+              existingData[i] = existingData[i].slice(0, maxColumns);
+          }
+      }
+      
+      console.log('Final data structure:', existingData.length, 'rows,', maxColumns, 'columns');
+      console.log('Headers:', headers);
       
       // Write all data back to sheet
       if (existingData.length > 0) {
-        sheet.getRange(1, 1, existingData.length, headers.length).setValues(existingData);
-        console.log('Wrote data to sheet:', existingData.length, 'rows,', headers.length, 'columns');
+          sheet.getRange(1, 1, existingData.length, maxColumns).setValues(existingData);
+          console.log('Successfully wrote data to sheet');
       }
-      
-      // Create comprehensive statistics with attendance counts
-      createComprehensiveStats(spreadsheet, headers, existingData, date);
-      
-      // Return success response
-      return ContentService
-        .createTextOutput(JSON.stringify({ 
-          success: true, 
-          message: 'Attendance recorded successfully',
-          debug: {
-            date: date,
-            studentsCount: allStudents.length,
-            presentCount: allStudents.filter(s => s.present).length,
-            totalDates: headers.length - 2, // Subtract Student ID and Name columns
-            totalStudents: existingData.length - 1 // Subtract header row
-          }
-        }))
-        .setMimeType(ContentService.MimeType.JSON);
+      createComprehensiveStats(spreadsheet, headers, existingData, normalizedDate);
+      return ContentService.createTextOutput(JSON.stringify({ success: true, message: 'Attendance recorded successfully.'})).setMimeType(ContentService.MimeType.JSON);
     }
     
-    // Default response for simple GET requests
-    return ContentService
-      .createTextOutput('Attendance Tracker API is running')
-      .setMimeType(ContentService.MimeType.TEXT);
-      
+    return ContentService.createTextOutput('API running.').setMimeType(ContentService.MimeType.TEXT);
   } catch (error) {
-    console.error('Error processing attendance:', error);
-    return ContentService
-      .createTextOutput(JSON.stringify({ 
-        success: false, 
-        error: error.toString(),
-        stack: error.stack
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
+    console.error('Error:', error.toString(), 'Stack:', error.stack);
+    return ContentService.createTextOutput(JSON.stringify({ success: false, error: error.toString() })).setMimeType(ContentService.MimeType.JSON);
   }
 }
+
+// ... (No changes are needed for the other functions: createComprehensiveStats, getAttendanceRating, formatStatsSheet, doPost, doOptions) ...
 
 function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
   try {
@@ -157,40 +227,36 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     
     // Calculate attendance for each student
     const studentStats = [];
-    const dateColumns = headers.slice(2); // Skip Student ID and Name columns
+    const dateColumns = headers.slice(1); // Skip Student Name column
     
     console.log('Date columns:', dateColumns);
     
     for (let i = 1; i < data.length; i++) {
-      const studentId = data[i][0];
-      const studentName = data[i][1];
+      const studentName = data[i][0];
       
-      console.log('Processing student:', studentId, studentName);
+      console.log('Processing student:', studentName);
       
-      if (studentId && studentName) {
+      if (studentName) {
         let presentCount = 0;
-        let totalSessions = 0;
+        let totalSessions = dateColumns.length; // Total number of training days
         
         // Count attendance for all dates
-        for (let j = 2; j < data[i].length; j++) {
+        for (let j = 1; j < data[i].length; j++) {
           if (data[i][j] === 'X') {
             presentCount++;
-            totalSessions++;
-            console.log('Found X for student', studentId, 'at column', j);
+            console.log('Found X for student', studentName, 'at column', j);
           } else if (data[i][j] === '') {
             // Skip empty cells (future dates)
           } else {
-            totalSessions++;
-            console.log('Found non-X for student', studentId, 'at column', j, 'value:', data[i][j]);
+            console.log('Found non-X for student', studentName, 'at column', j, 'value:', data[i][j]);
           }
         }
         
         const attendancePercent = totalSessions > 0 ? Math.round((presentCount / totalSessions) * 100) : 0;
         
-        console.log('Student stats:', studentId, 'Present:', presentCount, 'Total:', totalSessions, 'Percent:', attendancePercent);
+        console.log('Student stats:', studentName, 'Present:', presentCount, 'Total:', totalSessions, 'Percent:', attendancePercent);
         
         studentStats.push({
-          id: studentId,
           name: studentName,
           presentCount: presentCount,
           totalSessions: totalSessions,
@@ -203,20 +269,18 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     
     // Create comprehensive statistics
     const statsData = [
-      ['COMPREHENSIVE ATTENDANCE STATISTICS', '', '', '', '', '']
+      ['PÕHILIK KOHALOLEKU STATISTIKA', '', '', '']
     ];
     
     // Add individual student statistics
-    statsData.push(['Student ID', 'Student Name', 'Present Sessions', 'Total Sessions', 'Attendance %', 'Rating']);
+    statsData.push(['Õpilase nimi', 'Kohalolekud', 'Kokku treeninguid', 'Kohaloleku %']);
     
     studentStats.forEach(student => {
       statsData.push([
-        student.id,
         student.name,
         student.presentCount,
         student.totalSessions,
-        student.attendancePercent + '%',
-        getAttendanceRating(student.attendancePercent)
+        student.attendancePercent + '%'
       ]);
     });
     
@@ -228,25 +292,44 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
     
     console.log('Overall stats:', 'Students:', totalStudents, 'Present:', totalPresent, 'Sessions:', totalSessions, 'Percent:', overallAttendance);
     
-    statsData.push(['', '', '', '', '', '']);
-    statsData.push(['OVERALL STATISTICS', '', '', '', '', '']);
-    statsData.push(['Total Students', totalStudents, '', '', '', '']);
-    statsData.push(['Total Present Sessions', totalPresent, '', '', '', '']);
-    statsData.push(['Total Sessions', totalSessions, '', '', '', '']);
-    statsData.push(['Overall Attendance %', overallAttendance + '%', '', '', '', '']);
-    statsData.push(['Overall Rating', getAttendanceRating(overallAttendance), '', '', '', '']);
+    statsData.push(['', '', '', '']);
+    statsData.push(['ÜLDINE STATISTIKA', '', '', '']);
+    statsData.push(['Õpilaste arv', totalStudents, '', '']);
+    statsData.push(['Kokku kohalolekud', totalPresent, '', '']);
+    statsData.push(['Kokku treeninguid', totalSessions, '', '']);
+    statsData.push(['Üldine kohaloleku %', overallAttendance + '%', '', '']);
     
-    // Add session dates
-    statsData.push(['', '', '', '', '', '']);
-    statsData.push(['SESSION DATES', '', '', '', '', '']);
+    // Add session dates with normalized format
+    statsData.push(['', '', '', '']);
+    statsData.push(['TREENINGU KUUPÄEVAD', '', '', '']);
     dateColumns.forEach((date, index) => {
-      statsData.push([`Session ${index + 1}`, date, '', '', '', '']);
+      // Convert any date format to Estonian format
+      let formattedDate;
+      try {
+        if (String(date).match(/^(\d+)\.\s*([A-Za-zäöüõÄÖÜÕ]+)$/)) {
+          // Already in Estonian format
+          formattedDate = date;
+        } else {
+          // Convert from other formats to Estonian
+          const dateObj = new Date(date);
+          if (!isNaN(dateObj.getTime())) {
+            formattedDate = formatDateToEstonian(date);
+          } else {
+            formattedDate = date; // Keep original if parsing fails
+          }
+        }
+      } catch (e) {
+        console.log('Error formatting date:', date, e);
+        formattedDate = date;
+      }
+      
+      statsData.push([`Treening ${index + 1}`, formattedDate, '', '']);
     });
     
     console.log('Prepared stats data with', statsData.length, 'rows');
     
     // Ensure all rows have the same number of columns
-    const maxColumns = 6;
+    const maxColumns = 4;
     const normalizedStatsData = statsData.map(row => {
       const normalizedRow = [...row];
       while (normalizedRow.length < maxColumns) {
@@ -273,27 +356,18 @@ function createComprehensiveStats(spreadsheet, headers, data, currentDate) {
   }
 }
 
-function getAttendanceRating(percentage) {
-  if (percentage >= 90) return 'Excellent (90%+)';
-  if (percentage >= 80) return 'Very Good (80-89%)';
-  if (percentage >= 70) return 'Good (70-79%)';
-  if (percentage >= 60) return 'Fair (60-69%)';
-  if (percentage >= 50) return 'Poor (50-59%)';
-  return 'Very Poor (<50%)';
-}
-
 function formatStatsSheet(sheet, dataLength) {
   try {
     // Format main headers
-    sheet.getRange(1, 1, 1, 6).setFontWeight('bold').setFontSize(14);
-    sheet.getRange(2, 1, 1, 6).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, 4).setFontWeight('bold').setFontSize(14);
+    sheet.getRange(2, 1, 1, 4).setFontWeight('bold');
     
     // Format overall statistics (approximate position)
     const overallStart = Math.max(1, dataLength - 10);
-    sheet.getRange(overallStart, 1, 1, 6).setFontWeight('bold');
+    sheet.getRange(overallStart, 1, 1, 4).setFontWeight('bold');
     
     // Auto-resize columns
-    sheet.autoResizeColumns(1, 6);
+    sheet.autoResizeColumns(1, 4);
     
     console.log('Formatted stats sheet');
   } catch (error) {
