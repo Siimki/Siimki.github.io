@@ -113,7 +113,6 @@ export const pageText = {
       description:
         "Valik töös olevaid ja varasemaid objekte ning täielik arhiiv aastate kaupa.",
       archiveTitle: "Arhiiv",
-      archiveHint: "Objektid on rühmitatud aasta või staatuse järgi.",
     },
     contact: {
       seoTitle: "Kontakt - VAP Ventilatsioon",
@@ -182,7 +181,6 @@ export const pageText = {
       description:
         "A selection of ongoing and completed projects, plus the full archive grouped by year.",
       archiveTitle: "Archive",
-      archiveHint: "Project names are kept close to the source archive and grouped by year or status.",
     },
     contact: {
       seoTitle: "Contact - VAP Ventilatsioon",

@@ -21,12 +21,11 @@ const groupTitle = (title: string) => {
   <div class="section-inner">
     <div class="section-heading">
       <p class="eyebrow">{text.archiveTitle}</p>
-      <h2>{text.archiveHint}</h2>
     </div>
 
     <div class="archive-list">
       {projectGroups.map((group, index) => (
-        <details class="archive-group" open={index === 0}>
+        <details class={`archive-group${index === 0 ? " archive-group-featured" : ""}`} open={index === 0}>
           <summary>
             <span>{groupTitle(group.title)}</span>
             <span>{group.entries.length}</span>

@@ -432,6 +432,11 @@ p {
   overflow: hidden;
 }
 
+.archive-group-featured {
+  border-color: rgba(41, 97, 82, 0.35);
+  box-shadow: 0 14px 30px rgba(20, 45, 38, 0.08);
+}
+
 .archive-group summary {
   min-height: 58px;
   display: flex;
@@ -443,6 +448,13 @@ p {
   padding: 16px 20px;
 }
 
+.archive-group-featured summary {
+  min-height: 74px;
+  background: #eef4f2;
+  color: var(--green-dark);
+  font-size: 1.35rem;
+}
+
 .archive-group summary span:last-child {
   min-width: 34px;
   border-radius: 999px;
@@ -451,6 +463,13 @@ p {
   font-size: 0.85rem;
   text-align: center;
   padding: 2px 8px;
+}
+
+.archive-group-featured summary span:last-child {
+  background: var(--green-dark);
+  color: #fff;
+  font-size: 0.95rem;
+  padding: 4px 11px;
 }
 
 .archive-table {
