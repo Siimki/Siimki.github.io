@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HomeSections from "../components/HomeSections.astro";
+import { pageText, routes } from "../data/site";
+
+const locale = "et";
+const text = pageText[locale].home;
+---
+
+<BaseLayout
+  locale={locale}
+  title={text.seoTitle}
+  description={text.description}
+  canonicalPath={routes.et.home}
+  alternatePath={routes.en.home}
+>
+  <HomeSections locale={locale} />
+</BaseLayout>

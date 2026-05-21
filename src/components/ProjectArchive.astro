@@ -1,0 +1,53 @@
+---
+import { projectGroups } from "../data/projects";
+import { projectScopeLabel } from "../data/projectLabels";
+import { pageText, type Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const text = pageText[locale].projects;
+const emptyLabel = locale === "et" ? "Selle aasta objektid lisatakse hiljem." : "Projects for this year will be added later.";
+
+const groupTitle = (title: string) => {
+  if (locale === "en" && title === "Töös olevad objektid") return "Ongoing projects";
+  return title;
+};
+---
+
+<section class="section">
+  <div class="section-inner">
+    <div class="section-heading">
+      <p class="eyebrow">{text.archiveTitle}</p>
+      <h2>{text.archiveHint}</h2>
+    </div>
+
+    <div class="archive-list">
+      {projectGroups.map((group, index) => (
+        <details class="archive-group" open={index === 0}>
+          <summary>
+            <span>{groupTitle(group.title)}</span>
+            <span>{group.entries.length}</span>
+          </summary>
+          <div class="archive-table">
+            {group.entries.length > 0 ? (
+              group.entries.map((entry) => (
+                <div class="archive-row">
+                  <strong>{entry.name}</strong>
+                  <span>{projectScopeLabel(entry.scope, locale)}</span>
+                </div>
+              ))
+            ) : (
+              <div class="archive-row archive-row-empty">
+                <strong>{emptyLabel}</strong>
+                <span></span>
+              </div>
+            )}
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import { pageText, routes } from "../../../data/site";
+
+const locale = "en";
+const text = pageText[locale].about;
+---
+
+<BaseLayout
+  locale={locale}
+  title={text.seoTitle}
+  description={text.description}
+  canonicalPath={routes.en.about}
+  alternatePath={routes.et.about}
+>
+  <PageHeader title={text.title} description={text.description} />
+  <section class="section">
+    <div class="section-inner split-layout">
+      <div class="copy-block">
+        {text.body.map((paragraph) => <p>{paragraph}</p>)}
+        <h2>{text.valuesTitle}</h2>
+        <div class="value-grid">
+          {pageText[locale].home.values.map((value) => <span>{value}</span>)}
+        </div>
+      </div>
+      <img class="feature-image" src="/assets/about-ventilator.jpg" alt="" loading="lazy" width="1920" height="1279" />
+    </div>
+  </section>
+</BaseLayout>

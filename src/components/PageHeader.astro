@@ -1,0 +1,16 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<section class="page-header">
+  <div class="section-inner narrow">
+    <p class="eyebrow">VAP Ventilatsioon</p>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </div>
+</section>

@@ -1,0 +1,69 @@
+---
+import { company, pageText, type Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const text = pageText[locale].contact;
+---
+
+<section class="section">
+  <div class="section-inner contact-grid">
+    <section class="contact-block">
+      <h2>{text.addressTitle}</h2>
+      <dl>
+        <div>
+          <dt>{text.legalAddress}</dt>
+          <dd>{company.legalAddress}</dd>
+        </div>
+        <div>
+          <dt>{text.operatingAddress}</dt>
+          <dd>{company.operatingAddress}</dd>
+        </div>
+      </dl>
+      <a class="text-link" href={company.mapUrl} target="_blank" rel="noopener noreferrer">{text.mapLabel}</a>
+    </section>
+
+    <section class="contact-block">
+      <h2>E-mail</h2>
+      <p><a href={`mailto:${company.email}`}>{company.email}</a></p>
+      <h2>{text.peopleTitle}</h2>
+      <div class="people-list">
+        {company.people.map((person) => (
+          <article>
+            <h3>{person.name}</h3>
+            <p>{locale === "et" ? person.roleEt : person.roleEn}</p>
+            <a href={`tel:${person.phoneHref}`}>{person.phone}</a>
+            <a href={`mailto:${person.email}`}>{person.email}</a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="contact-block">
+      <h2>{text.detailsTitle}</h2>
+      <dl>
+        <div>
+          <dt>{locale === "et" ? "Registrikood" : "Registry code"}</dt>
+          <dd>{company.registryCode}</dd>
+        </div>
+        <div>
+          <dt>KMKR / VAT</dt>
+          <dd>{company.vat}</dd>
+        </div>
+        <div>
+          <dt>MTR / REA</dt>
+          <dd>{company.mtr}</dd>
+        </div>
+      </dl>
+      <h2>{text.registryLinks}</h2>
+      <div class="link-list">
+        {company.links.map((link) => (
+          <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+        ))}
+      </div>
+    </section>
+  </div>
+</section>

@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import ProjectArchive from "../../../components/ProjectArchive.astro";
+import { pageText, routes } from "../../../data/site";
+
+const locale = "en";
+const text = pageText[locale].projects;
+---
+
+<BaseLayout
+  locale={locale}
+  title={text.seoTitle}
+  description={text.description}
+  canonicalPath={routes.en.projects}
+  alternatePath={routes.et.projects}
+>
+  <PageHeader title={text.title} description={text.description} />
+  <ProjectArchive locale={locale} />
+</BaseLayout>

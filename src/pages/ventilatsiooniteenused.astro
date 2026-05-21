@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
+import ServiceGrid from "../components/ServiceGrid.astro";
+import { pageText, routes } from "../data/site";
+
+const locale = "et";
+const text = pageText[locale].services;
+---
+
+<BaseLayout
+  locale={locale}
+  title={text.seoTitle}
+  description={text.description}
+  canonicalPath={routes.et.services}
+  alternatePath={routes.en.services}
+>
+  <PageHeader title={text.title} description={text.description} />
+  <section class="section">
+    <div class="section-inner">
+      <ServiceGrid locale={locale} />
+    </div>
+  </section>
+</BaseLayout>

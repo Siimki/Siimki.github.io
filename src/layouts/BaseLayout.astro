@@ -1,0 +1,49 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+import type { Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  canonicalPath: string;
+  alternatePath: string;
+}
+
+const { locale, title, description, canonicalPath, alternatePath } = Astro.props;
+const siteUrl = "https://siimki.github.io";
+const canonicalUrl = new URL(canonicalPath, siteUrl).toString();
+const alternateUrl = new URL(alternatePath, siteUrl).toString();
+const currentLang = locale === "et" ? "et" : "en";
+const alternateLang = locale === "et" ? "en" : "et";
+---
+
+<!doctype html>
+<html lang={currentLang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f7f7f4" />
+    <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang={currentLang} href={canonicalUrl} />
+    <link rel="alternate" hreflang={alternateLang} href={alternateUrl} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}/`} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${siteUrl}/assets/hero-ventilator.jpg`} />
+    <link rel="icon" href="/assets/vap-logo.png" />
+  </head>
+  <body>
+    <Header locale={locale} currentPath={canonicalPath} alternatePath={alternatePath} />
+    <main>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

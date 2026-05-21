@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { routes } from "../data/site";
+---
+
+<BaseLayout
+  locale="et"
+  title="Lehte ei leitud - VAP Ventilatsioon"
+  description="Soovitud lehte ei leitud."
+  canonicalPath="/404.html"
+  alternatePath="/en/"
+>
+  <section class="page-header">
+    <div class="section-inner narrow">
+      <p class="eyebrow">404</p>
+      <h1>Lehte ei leitud</h1>
+      <p>Soovitud lehte ei leitud. Jätkamiseks liigu avalehele või kontaktilehele.</p>
+      <div class="hero-actions">
+        <a class="button button-primary" href={routes.et.home}>Avaleht</a>
+        <a class="button button-secondary" href={routes.et.contact}>Kontakt</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

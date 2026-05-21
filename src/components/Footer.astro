@@ -1,0 +1,49 @@
+---
+import { company, pageText, routes, type Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const text = pageText[locale];
+const navRoutes = routes[locale];
+const navItems = [
+  [text.nav.home, navRoutes.home],
+  [text.nav.about, navRoutes.about],
+  [text.nav.services, navRoutes.services],
+  [text.nav.projects, navRoutes.projects],
+  [text.nav.contact, navRoutes.contact],
+] as const;
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <section>
+      <h2>VAP Ventilatsioon</h2>
+      <p>{text.footerSummary}</p>
+      <p class="muted">{company.operatingAddress}</p>
+      <a href={`mailto:${company.email}`}>{company.email}</a>
+    </section>
+
+    <section>
+      <h2>{locale === "et" ? "Lehed" : "Pages"}</h2>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        {navItems.map(([label, href]) => <a href={href}>{label}</a>)}
+      </nav>
+    </section>
+
+    <section>
+      <h2>{locale === "et" ? "Lingid" : "Links"}</h2>
+      <div class="footer-nav">
+        {company.links.map((link) => (
+          <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+        ))}
+      </div>
+    </section>
+  </div>
+  <div class="footer-bottom">
+    <span>VAP Ventilatsioon</span>
+    <span>{company.registryCode}</span>
+  </div>
+</footer>

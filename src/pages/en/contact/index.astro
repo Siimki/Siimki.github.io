@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import ContactDetails from "../../../components/ContactDetails.astro";
+import { pageText, routes } from "../../../data/site";
+
+const locale = "en";
+const text = pageText[locale].contact;
+---
+
+<BaseLayout
+  locale={locale}
+  title={text.seoTitle}
+  description={text.description}
+  canonicalPath={routes.en.contact}
+  alternatePath={routes.et.contact}
+>
+  <PageHeader title={text.title} description={text.description} />
+  <ContactDetails locale={locale} />
+</BaseLayout>

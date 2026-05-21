@@ -1,0 +1,11 @@
+RewriteEngine On
+
+RewriteCond %{HTTPS} !=on [OR]
+RewriteCond %{HTTP_HOST} !^vap\.ee$ [NC]
+RewriteRule ^(.*)$ https://vap.ee/$1 [R=301,L]
+
+RewriteRule ^toopakkumised/?$ /kontakt/ [R=301,L]
+RewriteRule ^en/homepage/?$ /en/ [R=301,L]
+RewriteRule ^en/1644-2/?$ /en/contact/ [R=301,L]
+
+ErrorDocument 404 /404.html

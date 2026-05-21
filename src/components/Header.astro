@@ -1,0 +1,49 @@
+---
+import { pageText, routes, type Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+  currentPath: string;
+  alternatePath: string;
+}
+
+const { locale, currentPath, alternatePath } = Astro.props;
+const text = pageText[locale];
+const navRoutes = routes[locale];
+const navItems = [
+  ["home", text.nav.home, navRoutes.home],
+  ["about", text.nav.about, navRoutes.about],
+  ["services", text.nav.services, navRoutes.services],
+  ["projects", text.nav.projects, navRoutes.projects],
+  ["contact", text.nav.contact, navRoutes.contact],
+] as const;
+---
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href={navRoutes.home} aria-label="VAP Ventilatsioon">
+      <img src="/assets/vap-logo.png" alt="VAP Ventilatsioon" width="246" height="66" />
+    </a>
+
+    <nav class="nav desktop-nav" aria-label="Primary navigation">
+      {navItems.map(([, label, href]) => (
+        <a href={href} aria-current={currentPath === href ? "page" : undefined}>{label}</a>
+      ))}
+      <a class="language-link" href={alternatePath}>{text.switchLabel}</a>
+    </nav>
+
+    <details class="mobile-nav">
+      <summary aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </summary>
+      <nav class="mobile-nav-panel" aria-label="Mobile navigation">
+        {navItems.map(([, label, href]) => (
+          <a href={href} aria-current={currentPath === href ? "page" : undefined}>{label}</a>
+        ))}
+        <a class="language-link" href={alternatePath}>{text.switchLabel}</a>
+      </nav>
+    </details>
+  </div>
+</header>

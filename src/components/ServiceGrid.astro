@@ -1,0 +1,21 @@
+---
+import { services, type Locale } from "../data/site";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<div class="service-grid">
+  {services[locale].map((service) => (
+    <article class="service-card">
+      <img src={service.image} alt="" loading="lazy" width="640" height="426" />
+      <div>
+        <h2>{service.title}</h2>
+        <p>{service.text}</p>
+      </div>
+    </article>
+  ))}
+</div>
