@@ -19,7 +19,7 @@ export const routes = {
 
 export const company = {
   name: "VAP Ventilatsioon",
-  legalName: "OÜ VAP Ventilatsioon",
+  legalName: "VAP Ventilatsioon OÜ",
   registryCode: "11179404",
   vat: "EE101001584",
   mtr: "EEH 001068 - Ehitamine",
@@ -70,7 +70,7 @@ export const pageText = {
       contact: "Kontakt",
     },
     footerSummary:
-      "VAP Ventilatsioon on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing, mille põhiliseks tegevusalaks on ventilatsioonisüsteemide projekteerimine ning paigaldus.",
+      "VAP Ventilatsioon OÜ on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing, mille põhiliseks tegevusalaks on ventilatsioonisüsteemide projekteerimine ning paigaldus.",
     home: {
       title: "VAP Ventilatsioon",
       seoTitle: "VAP Ventilatsioon - ventilatsioonitööd",
@@ -83,7 +83,7 @@ export const pageText = {
       secondaryCta: "Kontakt",
       aboutTitle: "Ettevõttest",
       aboutBody:
-        "VAP Ventilatsioon on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing. Täna on ettevõtte põhiliseks tegevusalaks ventilatsioonisüsteemide projekteerimine ning paigaldus. Ettevõtte meeskond omab pikaajalist kogemust ventilatsioonitööde valdkonnas.",
+        "VAP Ventilatsioon OÜ on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing. Täna on ettevõtte põhiliseks tegevusalaks ventilatsioonisüsteemide projekteerimine ning paigaldus. Ettevõtte meeskond omab pikaajalist kogemust ventilatsioonitööde valdkonnas.",
       values: ["Täpsus", "Kogemustepagas", "Kvaliteetne töö", "Kaasaegsed lahendused"],
       stats: [
         { value: "projectCount", label: "projekti" },
@@ -95,10 +95,10 @@ export const pageText = {
       seoTitle: "Firmast - VAP Ventilatsioon",
       title: "Firmast",
       description:
-        "VAP Ventilatsioon on Eesti erakapitalil põhinev ventilatsioonitööde ettevõte.",
+        "VAP Ventilatsioon OÜ on Eesti erakapitalil põhinev ventilatsioonitööde ettevõte.",
       body: [
-        "VAP Ventilatsioon on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing. Täna on ettevõtte põhiliseks tegevusalaks ventilatsioonisüsteemide projekteerimine ning paigaldus.",
-        "Ettevõtte meeskond omab pikaajalist kogemust ventilatsioonitööde valdkonnas. OÜ VAP Ventilatsioon visiooniks on pakkuda oma töös tänapäevaseid komplektseid ventilatsioonisüsteeme koos sinna juurde kuuluvate kaasaegsete ventilatsiooniseadmetega ning materjalidega. Eesmärk on leida ning pakkuda tellijale kiireid ja optimaalseid lahendusi.",
+        "VAP Ventilatsioon OÜ on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing. Täna on ettevõtte põhiliseks tegevusalaks ventilatsioonisüsteemide projekteerimine ning paigaldus.",
+        "Ettevõtte meeskond omab pikaajalist kogemust ventilatsioonitööde valdkonnas. VAP Ventilatsioon OÜ visiooniks on pakkuda oma töös tänapäevaseid komplektseid ventilatsioonisüsteeme koos sinna juurde kuuluvate kaasaegsete ventilatsiooniseadmetega ning materjalidega. Eesmärk on leida ning pakkuda tellijale kiireid ja optimaalseid lahendusi.",
       ],
     },
     services: {
@@ -137,7 +137,7 @@ export const pageText = {
       contact: "Contact",
     },
     footerSummary:
-      "VAP Ventilatsioon is a private limited company founded on Estonian capital in 2005. The company designs and installs ventilation systems.",
+      "VAP Ventilatsioon OÜ is a private limited company founded on Estonian capital in 2005. The company designs and installs ventilation systems.",
     home: {
       title: "VAP Ventilatsioon",
       seoTitle: "VAP Ventilatsioon - ventilation works",
@@ -162,10 +162,10 @@ export const pageText = {
       seoTitle: "About - VAP Ventilatsioon",
       title: "About",
       description:
-        "VAP Ventilatsioon is an Estonian ventilation works company founded in 2005.",
+        "VAP Ventilatsioon OÜ is an Estonian ventilation works company founded in 2005.",
       body: [
         "VAP Ventilatsioon OÜ is a private limited company founded on Estonian capital in 2005. The company’s main activities are the design and installation of ventilation systems.",
-        "The team has long experience in ventilation work. VAP Ventilatsioon aims to offer modern complete ventilation systems with contemporary equipment and materials, and to find fast, optimal solutions for clients.",
+        "The team has long experience in ventilation work. VAP Ventilatsioon OÜ aims to offer modern complete ventilation systems with contemporary equipment and materials, and to find fast, optimal solutions for clients.",
       ],
     },
     services: {
