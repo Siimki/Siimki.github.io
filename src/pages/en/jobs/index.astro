@@ -1,147 +1,294 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import PageHeader from "../../../components/PageHeader.astro";
-import { routes } from "../../../data/site";
+import { company, routes } from "../../../data/site";
 
 const locale = "en";
-
-const openings = [
-  {
-    title: "Ventilation Installer",
-    location: "Harju County",
-    workload: "Full-time",
-    closedAt: "31 Dec 2024",
-    summary:
-      "We were looking for an installer to assemble and configure ventilation systems on construction sites across Estonia.",
-  },
-  {
-    title: "Assistant to Project Manager",
-    location: "Lagedi, Harju County",
-    workload: "Full-time",
-    closedAt: "30 Sep 2024",
-    summary:
-      "We were looking for an assistant to help coordinate schedules, material orders, and communication for active sites.",
-  },
-];
 ---
 
 <BaseLayout
   locale={locale}
   title="Jobs - VAP Ventilatsioon"
-  description="Past job offers from VAP Ventilatsioon OÜ."
+  description="Job listings from VAP Ventilatsioon OÜ."
   canonicalPath={routes.en.jobs}
   alternatePath={routes.et.jobs}
 >
-  <PageHeader
-    title="Jobs"
-    description="Below are previous VAP Ventilatsioon OÜ job listings. There are currently no active vacancies."
-  />
+  <PageHeader title="Jobs" description="Job listings from VAP Ventilatsioon OÜ." />
 
-  <section class="jobs" aria-label="Expired job listings">
-    <h2>Expired job listings</h2>
-    <div class="job-list">
-      {openings.map((job) => (
-        <article class="job-card">
-          <div class="job-card__top">
-            <h3>{job.title}</h3>
-            <span class="job-card__status">Expired</span>
-          </div>
-          <p class="job-card__summary">{job.summary}</p>
-          <dl class="job-card__meta">
-            <div>
-              <dt>Location</dt>
-              <dd>{job.location}</dd>
-            </div>
-            <div>
-              <dt>Workload</dt>
-              <dd>{job.workload}</dd>
-            </div>
-            <div>
-              <dt>Application deadline</dt>
-              <dd>{job.closedAt}</dd>
-            </div>
-          </dl>
-        </article>
-      ))}
-    </div>
+  <section class="jobs" aria-label="Job listings">
+    <article class="job-card">
+      <h2>VENTILATION SYSTEMS INSTALLER</h2>
+      <table>
+        <tbody>
+          <tr>
+            <th scope="row">Offered position</th>
+            <td><strong>VENTILATION SYSTEMS INSTALLER</strong></td>
+          </tr>
+          <tr>
+            <th scope="row">Job offer expires</th>
+            <td><strong>Ended</strong></td>
+          </tr>
+          <tr>
+            <th scope="row">Position</th>
+            <td>skilled worker</td>
+          </tr>
+          <tr>
+            <th scope="row">Workplace location</th>
+            <td>Harju County, Tallinn, Estonia</td>
+          </tr>
+          <tr>
+            <th scope="row">Job description</th>
+            <td>
+              Installation of ventilation systems, including insulation when needed, on the employer's
+              construction sites in Tallinn and elsewhere in Estonia, and abroad when needed.
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Requirements for the candidate</th>
+            <td>
+              <p>We expect the candidate to have</p>
+              <ul>
+                <li>Independence</li>
+                <li>Responsibility</li>
+                <li>Decision-making ability</li>
+              </ul>
+              <p>Useful extras</p>
+              <ul>
+                <li>Previous work experience</li>
+                <li>Ability to read project documentation</li>
+                <li>Driving licence</li>
+                <li>Russian language skills</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Required education</th>
+            <td>unspecified</td>
+          </tr>
+          <tr>
+            <th scope="row">Language skills</th>
+            <td>Estonian</td>
+          </tr>
+          <tr>
+            <th scope="row">Driving licence</th>
+            <td>B</td>
+          </tr>
+          <tr>
+            <th scope="row">Additional information</th>
+            <td>
+              <p>We offer</p>
+              <ul>
+                <li>The opportunity to work in a youthful and positive team</li>
+                <li>Competitive salary under an employment contract on the agreed date</li>
+                <li>Varied work and development opportunities</li>
+                <li>On-site training</li>
+                <li>Tools and clothing needed for work</li>
+                <li>Transport option by agreement</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Offered job type and monthly salary</th>
+            <td>by agreement</td>
+          </tr>
+          <tr>
+            <th scope="row">Working time</th>
+            <td><strong>Full-time and start IMMEDIATELY</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="job-contact">
+        Send your CV with salary expectation by email:
+        <a href={`mailto:${company.email}`}>{company.email}</a>
+      </p>
+    </article>
+
+    <article class="job-card">
+      <h2>INSULATOR</h2>
+      <table>
+        <tbody>
+          <tr>
+            <th scope="row">Offered position</th>
+            <td><strong>INSULATOR</strong></td>
+          </tr>
+          <tr>
+            <th scope="row">Job offer expires</th>
+            <td><strong>Ended</strong></td>
+          </tr>
+          <tr>
+            <th scope="row">Position</th>
+            <td>skilled worker</td>
+          </tr>
+          <tr>
+            <th scope="row">Workplace location</th>
+            <td>Harju County, Tallinn, Estonia</td>
+          </tr>
+          <tr>
+            <th scope="row">Job description</th>
+            <td>Insulation of ventilation systems on the employer's construction sites in Tallinn and elsewhere in Estonia.</td>
+          </tr>
+          <tr>
+            <th scope="row">Requirements for the candidate</th>
+            <td>
+              <p>We expect the candidate to have</p>
+              <ul>
+                <li>Previous work experience</li>
+                <li>Independence</li>
+                <li>Responsibility</li>
+                <li>Decision-making ability</li>
+              </ul>
+              <p>Useful extras</p>
+              <ul>
+                <li>Previous work experience as an insulator</li>
+                <li>Ability to read project documentation</li>
+                <li>Driving licence</li>
+                <li>Russian language skills</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Required education</th>
+            <td>unspecified</td>
+          </tr>
+          <tr>
+            <th scope="row">Language skills</th>
+            <td>Estonian</td>
+          </tr>
+          <tr>
+            <th scope="row">Driving licence</th>
+            <td>B</td>
+          </tr>
+          <tr>
+            <th scope="row">Additional information</th>
+            <td>
+              <p>We offer</p>
+              <ul>
+                <li>The opportunity to work in a youthful and positive team</li>
+                <li>Competitive salary under an employment contract</li>
+                <li>Varied work and development opportunities</li>
+                <li>On-site training</li>
+                <li>Tools and clothing needed for work</li>
+                <li>A vehicle for work tasks (category B)</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Offered job type and monthly salary</th>
+            <td>by agreement</td>
+          </tr>
+          <tr>
+            <th scope="row">Working time</th>
+            <td>Full-time</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="job-contact">
+        Send your CV with salary expectation by email:
+        <a href={`mailto:${company.email}`}>{company.email}</a>
+      </p>
+    </article>
   </section>
 </BaseLayout>
 
 <style>
   .jobs {
-    width: min(960px, 92vw);
+    width: min(1120px, calc(100% - 40px));
     margin: 0 auto 5rem;
-  }
-
-  .jobs h2 {
-    margin: 0 0 1.25rem;
-    font-size: clamp(1.5rem, 2vw, 1.9rem);
-  }
-
-  .job-list {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
+    align-items: start;
   }
 
   .job-card {
-    border: 1px solid color-mix(in srgb, var(--line) 85%, #fff 15%);
-    border-radius: 8px;
-    padding: 1.2rem;
     background: #fff;
-    box-shadow: 0 8px 20px rgba(7, 33, 63, 0.06);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(7, 33, 63, 0.05);
   }
 
-  .job-card__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .job-card__top h3 {
+  .job-card h2 {
     margin: 0;
-    font-size: clamp(1.15rem, 1.5vw, 1.35rem);
-  }
-
-  .job-card__status {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 999px;
-    background: #f3f4f6;
-    color: #3f4855;
-    border: 1px solid #d5d8dd;
-    padding: 0.25rem 0.65rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .job-card__summary {
-    margin: 0 0 1rem;
-    color: var(--muted);
-  }
-
-  .job-card__meta {
-    margin: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 0.8rem;
-  }
-
-  .job-card__meta dt {
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 0.25rem;
-  }
-
-  .job-card__meta dd {
-    margin: 0;
-    font-weight: 600;
+    padding: 1rem;
     color: var(--ink);
+    font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  tr {
+    background: #f4f4f4;
+    border-top: 1px solid #fff;
+  }
+
+  th,
+  td {
+    padding: 0.72rem 0.8rem;
+    text-align: left;
+    vertical-align: top;
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+
+  th {
+    width: 34%;
+    color: var(--ink);
+    font-weight: 800;
+  }
+
+  td {
+    color: var(--ink);
+  }
+
+  td p {
+    color: var(--ink);
+    margin: 0 0 0.4rem;
+  }
+
+  td p:not(:first-child) {
+    margin-top: 0.65rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .job-contact {
+    padding: 1rem;
+    color: var(--ink);
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .job-contact a {
+    font-weight: 800;
+  }
+
+  @media (max-width: 900px) {
+    .jobs {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    th,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    th {
+      padding-bottom: 0.2rem;
+    }
+
+    td {
+      padding-top: 0.2rem;
+    }
   }
 </style>
