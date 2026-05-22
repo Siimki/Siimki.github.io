@@ -19,10 +19,6 @@ const text = pageText[locale].about;
     <div class="section-inner split-layout">
       <div class="copy-block">
         {text.body.map((paragraph) => <p>{paragraph}</p>)}
-        <h2>{text.valuesTitle}</h2>
-        <div class="value-grid">
-          {pageText[locale].home.values.map((value) => <span>{value}</span>)}
-        </div>
       </div>
       <img class="feature-image" src="/assets/about-ventilator.jpg" alt="" loading="lazy" width="1920" height="1279" />
     </div>

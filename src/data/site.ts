@@ -100,7 +100,6 @@ export const pageText = {
         "VAP Ventilatsioon on 2005. aasta sügisel asutatud Eesti erakapitalil põhinev osaühing. Täna on ettevõtte põhiliseks tegevusalaks ventilatsioonisüsteemide projekteerimine ning paigaldus.",
         "Ettevõtte meeskond omab pikaajalist kogemust ventilatsioonitööde valdkonnas. OÜ VAP Ventilatsioon visiooniks on pakkuda oma töös tänapäevaseid komplektseid ventilatsioonisüsteeme koos sinna juurde kuuluvate kaasaegsete ventilatsiooniseadmetega ning materjalidega. Eesmärk on leida ning pakkuda tellijale kiireid ja optimaalseid lahendusi.",
       ],
-      valuesTitle: "Põhimõtted",
     },
     services: {
       seoTitle: "Teenused - VAP Ventilatsioon",
