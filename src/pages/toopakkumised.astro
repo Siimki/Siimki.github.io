@@ -1,28 +1,147 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
-import { company, pageText, routes } from "../data/site";
+import { routes } from "../data/site";
 
 const locale = "et";
-const text = pageText[locale].jobs;
+
+const openings = [
+  {
+    title: "Ventilatsioonipaigaldaja",
+    location: "Harjumaa",
+    workload: "Täistööaeg",
+    closedAt: "31.12.2024",
+    summary:
+      "Otsisime paigaldajat ventilatsioonisüsteemide montaažiks ja seadistuseks ehitusobjektidel üle Eesti.",
+  },
+  {
+    title: "Projektijuhi assistent",
+    location: "Lagedi, Harjumaa",
+    workload: "Täistööaeg",
+    closedAt: "30.09.2024",
+    summary:
+      "Otsisime projektijuhi assistenti, kes aitaks koordineerida tööde ajakavasid, materjalitellimusi ja objekti suhtlust.",
+  },
+];
 ---
 
 <BaseLayout
   locale={locale}
-  title={text.seoTitle}
-  description={text.description}
+  title="Tööpakkumised - VAP Ventilatsioon"
+  description="VAP Ventilatsioon OÜ varasemad tööpakkumised."
   canonicalPath={routes.et.jobs}
   alternatePath={routes.en.jobs}
 >
-  <PageHeader title={text.title} description={text.description} />
-  <section class="section">
-    <div class="section-inner narrow copy-block">
-      <h2>{text.heading}</h2>
-      <p>{text.body}</p>
-      <div class="hero-actions">
-        <a class="button button-primary" href={`mailto:${company.email}`}>{text.emailCta}</a>
-        <a class="text-link" href={routes.et.contact}>{text.contactCta}</a>
-      </div>
+  <PageHeader
+    title="Tööpakkumised"
+    description="Allpool on VAP Ventilatsioon OÜ varasemad töökuulutused. Hetkel aktiivseid tööpakkumisi ei ole."
+  />
+
+  <section class="jobs" aria-label="Aegunud töökuulutused">
+    <h2>Aegunud töökuulutused</h2>
+    <div class="job-list">
+      {openings.map((job) => (
+        <article class="job-card">
+          <div class="job-card__top">
+            <h3>{job.title}</h3>
+            <span class="job-card__status">Aegunud</span>
+          </div>
+          <p class="job-card__summary">{job.summary}</p>
+          <dl class="job-card__meta">
+            <div>
+              <dt>Asukoht</dt>
+              <dd>{job.location}</dd>
+            </div>
+            <div>
+              <dt>Koormus</dt>
+              <dd>{job.workload}</dd>
+            </div>
+            <div>
+              <dt>Kandideerimise tähtaeg</dt>
+              <dd>{job.closedAt}</dd>
+            </div>
+          </dl>
+        </article>
+      ))}
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .jobs {
+    width: min(960px, 92vw);
+    margin: 0 auto 5rem;
+  }
+
+  .jobs h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(1.5rem, 2vw, 1.9rem);
+  }
+
+  .job-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .job-card {
+    border: 1px solid color-mix(in srgb, var(--line) 85%, #fff 15%);
+    border-radius: 8px;
+    padding: 1.2rem;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(7, 33, 63, 0.06);
+  }
+
+  .job-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .job-card__top h3 {
+    margin: 0;
+    font-size: clamp(1.15rem, 1.5vw, 1.35rem);
+  }
+
+  .job-card__status {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    background: #f3f4f6;
+    color: #3f4855;
+    border: 1px solid #d5d8dd;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .job-card__summary {
+    margin: 0 0 1rem;
+    color: var(--muted);
+  }
+
+  .job-card__meta {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.8rem;
+  }
+
+  .job-card__meta dt {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .job-card__meta dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--ink);
+  }
+</style>
