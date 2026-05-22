@@ -6,6 +6,7 @@ export const routes = {
     about: "/firmast/",
     services: "/ventilatsiooniteenused/",
     projects: "/tehtud-tood/",
+    jobs: "/toopakkumised/",
     contact: "/kontakt/",
   },
   en: {
@@ -13,6 +14,7 @@ export const routes = {
     about: "/en/about/",
     services: "/en/services/",
     projects: "/en/projects/",
+    jobs: "/en/jobs/",
     contact: "/en/contact/",
   },
 } as const;
@@ -67,6 +69,7 @@ export const pageText = {
       about: "Firmast",
       services: "Teenused",
       projects: "Tehtud tööd",
+      jobs: "Tööpakkumised",
       contact: "Kontakt",
     },
     footerSummary:
@@ -134,6 +137,7 @@ export const pageText = {
       about: "About",
       services: "Services",
       projects: "Projects",
+      jobs: "Jobs",
       contact: "Contact",
     },
     footerSummary:

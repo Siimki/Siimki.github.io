@@ -1,56 +1,56 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import PageHeader from "../components/PageHeader.astro";
-import { routes } from "../data/site";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import { routes } from "../../../data/site";
 
-const locale = "et";
+const locale = "en";
 
 const openings = [
   {
-    title: "Ventilatsioonipaigaldaja",
-    location: "Harjumaa",
-    workload: "Täistööaeg",
-    closedAt: "31.12.2024",
+    title: "Ventilation Installer",
+    location: "Harju County",
+    workload: "Full-time",
+    closedAt: "31 Dec 2024",
     summary:
-      "Otsisime paigaldajat ventilatsioonisüsteemide montaažiks ja seadistuseks ehitusobjektidel üle Eesti.",
+      "We were looking for an installer to assemble and configure ventilation systems on construction sites across Estonia.",
   },
   {
-    title: "Projektijuhi assistent",
-    location: "Lagedi, Harjumaa",
-    workload: "Täistööaeg",
-    closedAt: "30.09.2024",
+    title: "Assistant to Project Manager",
+    location: "Lagedi, Harju County",
+    workload: "Full-time",
+    closedAt: "30 Sep 2024",
     summary:
-      "Otsisime projektijuhi assistenti, kes aitaks koordineerida tööde ajakavasid, materjalitellimusi ja objekti suhtlust.",
+      "We were looking for an assistant to help coordinate schedules, material orders, and communication for active sites.",
   },
 ];
 ---
 
 <BaseLayout
   locale={locale}
-  title="Tööpakkumised - VAP Ventilatsioon"
-  description="VAP Ventilatsiooni varasemad tööpakkumised."
-  canonicalPath={routes.et.jobs}
-  alternatePath={routes.en.jobs}
+  title="Jobs - VAP Ventilatsioon"
+  description="Past job offers from VAP Ventilatsioon."
+  canonicalPath={routes.en.jobs}
+  alternatePath={routes.et.jobs}
 >
   <PageHeader
-    title="Tööpakkumised"
-    description="Allpool on VAP Ventilatsiooni varasemad töökuulutused. Hetkel aktiivseid tööpakkumisi ei ole."
+    title="Jobs"
+    description="Below are previous VAP Ventilatsioon job listings. There are currently no active vacancies."
   />
 
-  <section class="jobs" aria-label="Aegunud töökuulutused">
-    <h2>Aegunud töökuulutused</h2>
+  <section class="jobs" aria-label="Expired job listings">
+    <h2>Expired job listings</h2>
     <div class="job-list">
       {openings.map((job) => (
         <article class="job-card">
           <div class="job-card__top">
             <h3>{job.title}</h3>
-            <span class="job-card__status">Aegunud</span>
+            <span class="job-card__status">Expired</span>
           </div>
           <p class="job-card__summary">{job.summary}</p>
           <dl class="job-card__meta">
-            <div><dt>Asukoht</dt><dd>{job.location}</dd></div>
-            <div><dt>Koormus</dt><dd>{job.workload}</dd></div>
-            <div><dt>Kandideerimise tähtaeg</dt><dd>{job.closedAt}</dd></div>
+            <div><dt>Location</dt><dd>{job.location}</dd></div>
+            <div><dt>Workload</dt><dd>{job.workload}</dd></div>
+            <div><dt>Application deadline</dt><dd>{job.closedAt}</dd></div>
           </dl>
         </article>
       ))}
