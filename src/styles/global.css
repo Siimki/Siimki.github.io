@@ -598,7 +598,7 @@ dd {
 
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 20px;
   margin-top: 44px;
   border-top: 1px solid rgba(255, 255, 255, 0.16);
