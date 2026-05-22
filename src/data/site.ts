@@ -6,6 +6,7 @@ export const routes = {
     about: "/firmast/",
     services: "/ventilatsiooniteenused/",
     projects: "/tehtud-tood/",
+    jobs: "/toopakkumised/",
     contact: "/kontakt/",
   },
   en: {
@@ -13,6 +14,7 @@ export const routes = {
     about: "/en/about/",
     services: "/en/services/",
     projects: "/en/projects/",
+    jobs: "/en/jobs/",
     contact: "/en/contact/",
   },
 } as const;
@@ -67,6 +69,7 @@ export const pageText = {
       about: "Firmast",
       services: "Teenused",
       projects: "Tehtud tööd",
+      jobs: "Tööpakkumised",
       contact: "Kontakt",
     },
     footerSummary:
@@ -113,6 +116,17 @@ export const pageText = {
         "Valik töös olevaid ja varasemaid objekte ning täielik arhiiv aastate kaupa.",
       archiveTitle: "Arhiiv",
     },
+    jobs: {
+      seoTitle: "Tööpakkumised - VAP Ventilatsioon",
+      title: "Tööpakkumised",
+      description:
+        "Kui soovid liituda VAP Ventilatsioon OÜ meeskonnaga, võta meiega ühendust.",
+      heading: "Liitu meie meeskonnaga",
+      body:
+        "Ootame ühendust ventilatsioonisüsteemide projekteerimise ja paigalduse kogemusega inimestelt. Saada lühike tutvustus või CV e-posti aadressile vap@vap.ee.",
+      emailCta: "Kirjuta meile",
+      contactCta: "Kontakt",
+    },
     contact: {
       seoTitle: "Kontakt - VAP Ventilatsioon",
       title: "Kontakt",
@@ -134,6 +148,7 @@ export const pageText = {
       about: "About",
       services: "Services",
       projects: "Projects",
+      jobs: "Jobs",
       contact: "Contact",
     },
     footerSummary:
@@ -179,6 +194,17 @@ export const pageText = {
       description:
         "A selection of ongoing and completed projects, plus the full archive grouped by year.",
       archiveTitle: "Archive",
+    },
+    jobs: {
+      seoTitle: "Jobs - VAP Ventilatsioon",
+      title: "Jobs",
+      description:
+        "If you would like to join the VAP Ventilatsioon OÜ team, get in touch with us.",
+      heading: "Join our team",
+      body:
+        "We welcome messages from people with experience in ventilation system design and installation. Send a short introduction or CV to vap@vap.ee.",
+      emailCta: "Email us",
+      contactCta: "Contact",
     },
     contact: {
       seoTitle: "Contact - VAP Ventilatsioon",

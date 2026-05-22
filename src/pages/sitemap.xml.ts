@@ -7,11 +7,13 @@ const pages = [
   routes.et.about,
   routes.et.services,
   routes.et.projects,
+  routes.et.jobs,
   routes.et.contact,
   routes.en.home,
   routes.en.about,
   routes.en.services,
   routes.en.projects,
+  routes.en.jobs,
   routes.en.contact,
 ];
 

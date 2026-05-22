@@ -1,9 +1,9 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import PageHeader from "../components/PageHeader.astro";
-import { company, pageText, routes } from "../data/site";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import PageHeader from "../../../components/PageHeader.astro";
+import { company, pageText, routes } from "../../../data/site";
 
-const locale = "et";
+const locale = "en";
 const text = pageText[locale].jobs;
 ---
 
@@ -11,8 +11,8 @@ const text = pageText[locale].jobs;
   locale={locale}
   title={text.seoTitle}
   description={text.description}
-  canonicalPath={routes.et.jobs}
-  alternatePath={routes.en.jobs}
+  canonicalPath={routes.en.jobs}
+  alternatePath={routes.et.jobs}
 >
   <PageHeader title={text.title} description={text.description} />
   <section class="section">
@@ -21,7 +21,7 @@ const text = pageText[locale].jobs;
       <p>{text.body}</p>
       <div class="hero-actions">
         <a class="button button-primary" href={`mailto:${company.email}`}>{text.emailCta}</a>
-        <a class="text-link" href={routes.et.contact}>{text.contactCta}</a>
+        <a class="text-link" href={routes.en.contact}>{text.contactCta}</a>
       </div>
     </div>
   </section>
