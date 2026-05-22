@@ -167,7 +167,6 @@ export const pageText = {
         "VAP Ventilatsioon OÜ is a private limited company founded on Estonian capital in 2005. The company’s main activities are the design and installation of ventilation systems.",
         "The team has long experience in ventilation work. VAP Ventilatsioon aims to offer modern complete ventilation systems with contemporary equipment and materials, and to find fast, optimal solutions for clients.",
       ],
-      valuesTitle: "Principles",
     },
     services: {
       seoTitle: "Services - VAP Ventilatsioon",
